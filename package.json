@@ -1,0 +1,34 @@
+{
+  "name": "sightstone",
+  "version": "0.0.1",
+  "description": "A lightweight node module wrapping the Riot API",
+  "main": "lib/sightstone.js",
+  "scripts": {
+    "compile": "babel -d lib/ src/",
+    "test": "./node_modules/.bin/mocha --reporter spec test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kumquatexpress/sightstone.git"
+  },
+  "keywords": [
+    "riot",
+    "league",
+    "api"
+  ],
+  "author": "Boyang Niu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kumquatexpress/sightstone/issues"
+  },
+  "homepage": "https://github.com/kumquatexpress/sightstone",
+  "devDependencies": {
+    "babel": "^5.8.29",
+    "chai": "^3.4.0",
+    "mocha": "^2.3.3"
+  },
+  "dependencies": {
+    "q": "^1.4.1",
+    "request": "^2.65.0"
+  }
+}
