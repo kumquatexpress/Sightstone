@@ -28,7 +28,9 @@
     "mocha": "^2.3.3"
   },
   "dependencies": {
+    "object-assign": "^4.0.1",
     "q": "^1.4.1",
+    "redis": "^2.2.5",
     "request": "^2.65.0"
   }
 }
