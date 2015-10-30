@@ -1,6 +1,6 @@
 {
   "name": "sightstone",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "A lightweight node module wrapping the Riot API",
   "main": "lib/sightstone.js",
   "scripts": {
@@ -23,12 +23,13 @@
   },
   "homepage": "https://github.com/kumquatexpress/sightstone",
   "devDependencies": {
+    "babel-core": "^6.0.12",
+    "babel-plugin-object-assign": "^1.2.1",
     "babel": "^5.8.29",
     "chai": "^3.4.0",
     "mocha": "^2.3.3"
   },
   "dependencies": {
-    "object-assign": "^4.0.1",
     "q": "^1.4.1",
     "redis": "^2.2.5",
     "request": "^2.65.0"

@@ -1,7 +1,6 @@
 var req = require('request'),
     Q = require('q'),
-    redis = require('redis'),
-    assign = require('object-assign');
+    redis = require('redis');
 
 class Sightstone {
   constructor(api_key, region, redis_options = undefined){
@@ -13,23 +12,40 @@ class Sightstone {
     this.base_params = {api_key: this.api_key};
     this.base_url = "https://na.api.pvp.net/api/lol";
   }
-  cacheResponse(url, response){
-
+  cacheResponse(url, response, ttl=900){
+    this.redis.set(url, response);
+    this.redis.expire(url, ttl);
   }
   validateAndRespond(url, params){
     let defer = Q.defer();
     if(typeof(params) === "object"){
-      assign(params, this.base_params, params);
+      Object.assign(params, this.base_params, params);
     } else {
       defer.reject(new Error("Cannot use non-object params"));
       return defer.promise;
     }
+
+    var {cache, ttl, params} = Sightstone.destructureParams(params);
+    let redisKey = url + JSON.stringify(params);
+    if(cache === false){
+      this.redis.del(redisKey);
+    }
+    this.redis.get(redisKey, function(err, val){
+      if(val){
+        defer.resolve(val);
+        return defer.promise;
+      }
+    });
+
     let request = {url: url, qs: params};
-    req(request, function(err, resp, body){
+    req(request, (err, resp, body) => {
       if(resp.statusCode != 200){
         defer.reject(new Error(body));
       } else {
         defer.resolve(body);
+        if(cache === true){
+          this.cacheResponse(redisKey, body, ttl);
+        }
       }
     });
     return defer.promise;
@@ -75,6 +91,12 @@ class Sightstone {
   stats_summary(summoner_id, params={}){
     return this.validateAndRespond(
       `${this.base_url}/${this.region}/v1.3/stats/by-summoner/${summoner_id}/summary`, params);    
+  }
+  static destructureParams(params){
+    let {cache, ttl} = params;
+    delete params.cache;
+    delete params.ttl;
+    return {cache: cache, ttl: ttl, params: params};
   }
 }
 
